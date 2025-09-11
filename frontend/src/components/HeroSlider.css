@@ -1,0 +1,86 @@
+.hero-slider {
+  height: 100vh; /* full screen height */
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  /* bac */
+  background-repeat: no-repeat;
+  position: relative;
+  transition: background-image 1s ease-in-out;
+  overflow: hidden;
+    /* border: 5px solid red; */
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5); /* darken background */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+  padding: 2rem;
+  /* text-align: center; */
+}
+
+.overlay h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.tabs button {
+  padding: 10px 20px;
+  background: #ddd;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.tabs button.active {
+  background: #fff;
+  font-weight: bold;
+}
+
+.search-box {
+  display: flex;
+  width: 90%;
+  max-width: 600px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  font-size: 1rem;
+}
+
+.search-box button {
+  background: #7A1FA2;
+  color: white;
+  padding: 0 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
