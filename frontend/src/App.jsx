@@ -4,13 +4,14 @@ import Navbar from './components/NavBar';
 import Footer from './components/Footer';
 import Signup from './pages/SignUp';
 import Login from './pages/Login';
-// import ForgotPassword from './pages/ForgotPassword';
+import ForgotPassword from "./pages/ForgetPassword";
+import ResetPassword from "./pages/RestPassword";
 
 function Layout({ children }) {
   const location = useLocation();
 
   // List of routes where you don't want navbar/footer
-  const authRoutes = ["/signup", "/login"];
+  const authRoutes = ["/signup", "/login", "/forgot-password", "/reset-password"];
 
   const hideLayout = authRoutes.includes(location.pathname);
 
@@ -31,7 +32,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </Layout>
     </Router>

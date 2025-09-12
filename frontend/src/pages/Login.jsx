@@ -1,14 +1,12 @@
 import React, { useState } from "react";
-import "./SignUp.css";  // ✅ reuse same styles
+import "./SignUp.css"; // reuse styles
 import { Eye, EyeOff } from "lucide-react";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-
-  // Form state
   const [form, setForm] = useState({
-    identifier: "", // email OR phone
-    password: ""
+    identifier: "", // email or phone
+    password: "",
   });
 
   const handleChange = (e) => {
@@ -22,18 +20,11 @@ export default function Login() {
       const res = await fetch("http://localhost:5000/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form),
       });
 
       const data = await res.json();
-      if (res.ok) {
-        alert("✅ Login successful");
-        console.log("User:", data);
-        // You can redirect with react-router here
-        // navigate("/");
-      } else {
-        alert(data.message || "Login failed");
-      }
+      alert(data.message);
     } catch (err) {
       console.error("Error:", err);
       alert("Something went wrong!");
@@ -56,8 +47,7 @@ export default function Login() {
                 name="identifier"
                 value={form.identifier}
                 onChange={handleChange}
-                placeholder="Enter your email or phone number"
-                required
+                placeholder="Enter your email or phone"
               />
             </div>
 
@@ -70,7 +60,6 @@ export default function Login() {
                   value={form.password}
                   onChange={handleChange}
                   placeholder="Enter your password"
-                  required
                 />
                 <button
                   type="button"
@@ -87,6 +76,10 @@ export default function Login() {
 
           <p className="alt">
             Don’t have an account? <a href="/signup">Sign Up</a>
+          </p>
+
+          <p className="alt">
+            <a href="/forgot-password">Forgot Password?</a>
           </p>
         </div>
       </div>
