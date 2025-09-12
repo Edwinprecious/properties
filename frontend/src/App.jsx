@@ -5,7 +5,7 @@ import Home from './pages/Home';
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 // import './App.css'
-// import Navbar from './components/NavBar';
+import Navbar from './components/NavBar';
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       <Router>
-      {/* <Navbar /> */}
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
       </Routes>
