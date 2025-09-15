@@ -6,14 +6,14 @@ import '../styles.css'
 import OptionsCard from '../components/OptionsCard';
 import Insta from '../components/Insta';
 import TalkAgent from '../components/TalkAgent';
+import Navbar from '../components/Navbar';
 
 
 const Home = () => {
   return (
     <>
+    <Navbar />
       <HeroSlider />
-
-      
      <div className="popular-sec">
         <div className="populars">
             <h2>Popular in Lagos</h2>
