@@ -1,0 +1,34 @@
+.section3-container{
+    display: block;
+    position: relative;
+    bottom: 29%;
+}
+
+.section3-wrap{
+    display: flex;
+    box-sizing: border-box;
+    /* margin-bottom: 639%; */
+    /* background-color: #790707; */
+    margin-right: 30px;
+}
+
+.active{
+    width: 50%;
+    box-sizing: border-box;
+}
+.text3{
+    display: block;
+    font-size: 22px;
+    position: relative;
+    top: 182px;
+    font-weight: bold;
+    font-family: cursive;
+}
+.text3 button{
+    width: 23%;
+    float: left;
+    margin: 6px;
+    border-radius: 5px;
+    background-color: black;
+    color: #fff;
+}

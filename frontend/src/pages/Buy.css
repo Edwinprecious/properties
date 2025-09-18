@@ -1,0 +1,122 @@
+
+.bg-con{
+    /* display: flex; */
+    margin-top: 245px;
+    font-size: 20px;
+    margin-left: 8%;
+}
+.search-bg{
+    display: grid;
+    width: 10%;
+    grid-template-columns: repeat(2, 430px);
+}
+.search-bg button{
+    width: 50px;
+    background-color: rgb(159, 83, 138);
+    color: #fff;
+    padding: 1%;
+}
+.bg-mg{
+    width: 50%;
+    height: 1370%;
+    display: flex;
+    position: relative;
+    bottom: 421px;
+    left: 750px;
+}
+.bg-c-text{
+    font-size: 15px;
+    position: relative;
+    bottom:380px;
+    margin-left: 6%;
+    font-family: cursive;
+}
+.bg-conn{
+    display: flex;
+}
+.sidebyimage{
+    display: flex;
+    /* width: 20%; */
+}
+
+.sidewrap{
+    display: inline-block;
+    justify-content: center;
+    justify-content: space-between;
+    /* position: absolute; */
+    position: relative;
+    bottom: 320px;
+    margin-left: 115px;
+}
+.sidewrap img{
+    display: flex;
+    position: relative;
+    left: 890px;
+    /* bottom: 230px; */
+    width: 100%;
+}
+.sidetext{
+    display: flexbox;
+    font-family: cursive;
+    font-weight: bold;
+    font-size: 17px;
+    position: relative;
+    position: absolute;
+    top: 100px;
+}
+.sidetext button{
+    background-color:purple ;
+    color: #fff;
+    max-width: 330px;
+    width: 240px;
+    padding: 9px;
+}
+.clearfix{
+    overflow: auto;
+}
+.section2-container{
+    display: flex;
+    position: relative;
+    bottom: 200px;
+}
+.section2-wrap{
+    display: flex;
+    justify-content: space-between;
+    margin-left: 130px;
+}
+.text-section2{
+    display: block;
+    justify-content: space-around;
+    position: relative;
+    left: 240px;
+    font-size: 19px;
+    font-family: cursive;
+}
+.text-section2 button{
+    background-color: purple;
+    color: #fff;
+    padding-left: 32px;
+    padding-right: 28px;
+    padding-top: 12px;
+    padding-bottom: 14px;
+    width: 240px;
+}
+.sideby{
+    display: flex;
+    margin-top: 150px;
+}
+
+footer{
+    display: inline;
+    font-size: 12px;
+}
+/* footer, table, tr{
+    display: flex;
+    flex-direction: column;
+} */
+.tb-container, tr{
+    display: flexbox;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 23px;
+}

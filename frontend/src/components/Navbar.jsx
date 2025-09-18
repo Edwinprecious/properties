@@ -28,13 +28,13 @@ const Navbar = () => {
             <li className='nav-item'><a href="/buy">BUY</a></li>
             <li className='nav-item'><a href="#">RENT</a></li>
             <li className='nav-item'><a href="#">SELL</a></li>
-            <li className='nav-item dropdown' onMouseEnter={()=> handledropdownClick(
+            <li className='nav-item dropdown' onMouseOver={()=> handledropdownClick(
                 "mortgage"
             )}>
                 <span>MORTGAGE ▾</span>
                 {
                     openDropdown === "mortgage" && (
-                        <div className='dropdown-menu'>
+                    <div className='dropdown-menu'>
                     <div className='dropdown-column'>
                         <strong>Mortgage rates</strong>
                         <a href="#">Today's mortgage rates</a>
@@ -58,10 +58,10 @@ const Navbar = () => {
                 <li className='nav-item'><a href="#">LOAN</a></li>
                 <li className='nav-item'><a href="#">LOCATION</a></li>
                 <li className='nav-item dropdown' onMouseEnter={()=>handledropdownClick("Admin panel")}>
-                    <span>ADMIN PANEL ▾</span>
+                    <span>MANAGEMENT ▾</span>
                     {
                         openDropdown === "Admin panel" && (
-                            <div className='dropdown-menu'>
+                            <div id='dropdown-menu'>
                         <div className='dropdown-column'>
                             <strong>Dashboard</strong>
                             <a href="#">User Listings</a>
