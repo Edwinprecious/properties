@@ -148,7 +148,7 @@ export default function SignUp() {
           </form>
 
           <p className="alt">
-            Already have an account? <a href="#">Login</a>
+            Already have an account? <a href="/login">Login</a>
           </p>
         </div>
       </div>

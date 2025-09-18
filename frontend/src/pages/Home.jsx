@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'
 import HeroSlider from '../components/HeroSlider';
 import PopularCard from '../components/PopularCard';
 import Popular from '../Popular';
@@ -34,7 +35,7 @@ const Home = () => {
           <img src="/images/Image_fx.jpg" alt="background"className="recommendation-bg" />
           <div className="recommendation-overlay">
             <h3>See other more<br />recommendations</h3>
-            <button className="recommendation-btn">Join or sign in</button>
+            <button className="recommendation-btn"><Link to="/signup">Join or sign up</Link></button>
           </div>
         </div> 
       </div> 

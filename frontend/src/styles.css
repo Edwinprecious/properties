@@ -184,7 +184,7 @@ body {
   margin: 0;
 }
 
-.recommendation-btn {
+.recommendation-btn, link {
   /* background-color: #d10027; */
    background-color: var(--primary-purple);
   color: white;
@@ -204,3 +204,10 @@ body {
    background-color: var(--dark-purple);
 }
 
+link {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  margin: 0px 30px 35px 10px; 
+  
+}
