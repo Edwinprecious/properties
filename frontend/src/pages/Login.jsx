@@ -5,7 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
-    identifier: "", // email or phone
+    email: "", // email or phone
     password: "",
   });
 
@@ -24,7 +24,9 @@ export default function Login() {
       });
 
       const data = await res.json();
-      alert(data.message);
+      if(data.success)
+      alert(data?.message);
+      // alert(JSON.stringify(data));
     } catch (err) {
       console.error("Error:", err);
       alert("Something went wrong!");
@@ -44,8 +46,8 @@ export default function Login() {
               <label>Email or Phone</label>
               <input
                 type="text"
-                name="identifier"
-                value={form.identifier}
+                name="email"
+                value={form.email}
                 onChange={handleChange}
                 placeholder="Enter your email or phone"
               />
