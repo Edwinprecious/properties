@@ -19,13 +19,44 @@ const Navbar = () => {
     
     <>
     <nav className='navbar'>
-    <section className='logo'>
-        {/* <img src="/images/EstateLogo.png" alt="images" /> */}
-        </section>
-    <section className='container'>
+    <img style={{backgroundColor: 'purple'}} src="/images/Valerie.png" alt='Estatelogo' width='80em' />
+    <section className='container' id='nav-container'>
         <ul className='nav-link'>
-            <span style={{fontSize:"25px", fontFamily: "sans-serif"}}>RealEstate</span>
-            <li className='nav-item'><a href="/buy">BUY</a></li>
+
+            <li className='nav-item dropdown' onClick={()=> handledropdownClick(
+                "buy"
+            )}>
+                <span>BUY ▾</span>
+                {
+                    openDropdown === "buy" && (
+                    <div className='dropdown-menu'>
+                    <div className='dropdown-column'>
+                        <strong>Lagos Searches</strong>
+                        <a href="/Houseebuy">House for Sale</a>
+                        <a href="#">Condos for sale</a>
+                        <a href="#">Land for sale</a>
+                        <a href="#">Open sale</a>
+                        <a href="#">Open houses</a>
+                        <a href="#">Recently sold</a>
+                        </div>
+                        <div className='dropdown-column'>
+                            <strong>Buying Options</strong>
+                            <a href="#">Buy with Valerie classic </a>
+                            <a href="#">Valerie classic Premier</a>
+
+                        </div>
+                        <div className='dropdown-column'>
+                            <strong>Buying Resources</strong>
+                            <a href="#">Affordabilty calculator</a>
+                            <a href="#">Home Buying guide</a>                           
+                            <a href="#">Free home buying classes</a>                           
+                        </div>
+
+                    </div>
+
+                    )
+                }
+                 </li>
             <li className='nav-item'><a href="#">RENT</a></li>
             <li className='nav-item'><a href="#">SELL</a></li>
             <li className='nav-item dropdown' onMouseOver={()=> handledropdownClick(
@@ -57,7 +88,7 @@ const Navbar = () => {
                  </li>
                 <li className='nav-item'><a href="#">LOAN</a></li>
                 <li className='nav-item'><a href="#">LOCATION</a></li>
-                <li className='nav-item dropdown' onMouseEnter={()=>handledropdownClick("Admin panel")}>
+                {/* <li className='nav-item dropdown' onMouseEnter={()=>handledropdownClick("Admin panel")}>
                     <span>MANAGEMENT ▾</span>
                     {
                         openDropdown === "Admin panel" && (
@@ -75,9 +106,9 @@ const Navbar = () => {
                         )
                     }
                     
-                </li>
-                <li className='nav-item'><a href="#">TECHNICAL FEATURES</a></li>
-                <li className='nav-item'><a href="#">FEED</a></li>
+                </li> */}
+                {/* <li className='nav-item'><a href="#">TECHNICAL FEATURES</a></li>
+                <li className='nav-item'><a href="#">FEED</a></li> */}
 
 
             </ul>

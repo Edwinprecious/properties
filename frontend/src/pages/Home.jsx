@@ -11,8 +11,8 @@ import Navbar from '../components/Navbar';
 
 const Home = () => {
   return (
+
     <>
-    <Navbar />
       <HeroSlider />
      <div className="popular-sec">
         <div className="populars">
