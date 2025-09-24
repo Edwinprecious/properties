@@ -82,53 +82,28 @@ def signup():
         return jsonify({"status": "error", "message": "Something went wrong"}), 500
 
 
-
-@app.route("/api/login", methods=["POST"])
-def login():
-    data = request.json
-    email = data.get("email")
-    password = data.get("password")
-    print(data)
-
-    if not email or not password:
-        return jsonify({"error": "Email and password required"}), 400
-
-    conn = get_db_connection()
-    cursor = conn.cursor(dictionary=True)
-
-    cursor.execute("SELECT * FROM valerie WHERE email = %s", (email,))
-    user = cursor.fetchone()
-    cursor.close()
-    conn.close()
-
-    if not user:
-        return jsonify({"error": "User not found"}), 404
-
-    # check password hash
-    if  check_password_hash(user["password"], password):
-
+@app.route("/api/login", methods=["POST"])  
+def login(): 
+    data = request.json 
+    email = data.get("email") 
+    password = data.get("password") 
+    print(data) 
+    if not email or not password: 
+        return jsonify({"error": "Email and password required"}), 400 
+    conn = get_db_connection() 
+    cursor = conn.cursor(dictionary=True) 
+    cursor.execute("SELECT * FROM valerie WHERE email = %s", (email,)) 
+    user = cursor.fetchone() 
+    cursor.close() 
+    conn.close() 
+    if not user: 
+        return jsonify({"error": "User not found"}), 404 
+    # check password hash 
+    if check_password_hash(user["password"], password):
         access_token = create_access_token(identity=user["email"])
+        return jsonify({"access_token": access_token, "success": True}), 200
 
-
-        return jsonify({"access_token": access_token, "success":True}), 200 
-    
     return jsonify({"error": "Invalid credentials"}), 401
-    
-    
-
-    # generate JWT
-    # token = jwt.encode(
-    #     {
-    #         "id": user["id"],
-    #         "email": user["email"],
-    #          "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=2)
-    #     },
-    #     app.config["SECRET_KEY"],
-    #     algorithm="HS256"
-    # )
-
-    # return jsonify({"token": token})
-    # return jsonify(data)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
