@@ -54,8 +54,58 @@ try:
             )
     ''')
 
+    cursor.execute('''
 
+        CREATE TABLE IF NOT EXISTS properties (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        price DECIMAL(15,2) NOT NULL,
+        location VARCHAR(100) NOT NULL,
+        address VARCHAR(255),
+        description TEXT,
+        image_url VARCHAR(500),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+                   
+    ''')     
+
+
+    cursor.execute('''
+
+        CREATE TABLE IF NOT EXISTS property_images (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        property_id INT NOT NULL,
+        image_url VARCHAR(500) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
+        )           
+                   
+    ''')
     
+
+#     properties = [
+#     {
+#         "id": 1,
+#         "title": "Luxury Apartment",
+#         "price": 120000,
+#         "location": "Lagos",
+#         "image_url": "http://example.com/apt.jpg",
+#         "description": "3-bedroom flat in Lekki"
+#     },
+#     {
+#         "id": 2,
+#         "title": "Duplex",
+#         "price": 250000,
+#         "location": "Abuja",
+#         "image_url": "http://example.com/duplex.jpg",
+#         "description": "5-bedroom duplex in Maitama"
+#     }
+
+# INSERT INTO properties (title, description, price, location)
+# VALUES 
+# ("Luxury Apartment", "3-bedroom apartment with sea view", 250000.00, "Lagos"),
+# ("Cozy Bungalow", "2-bedroom bungalow in a quiet area", 85000.00, "Abuja");
+# ]
 
     #commit the transaction
     conn.commit()        
