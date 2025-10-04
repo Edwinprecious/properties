@@ -1,14 +1,233 @@
-*{
-    box-sizing: border-box;
-    padding: 0%;
-    margin: 0;
-}
-.Container{
-    display: block;
-    font-family: sans-serif;
-}
-.search-container, input{
+.container {
     display: flex;
-    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 40px 60px;
+    gap: 40px;
+  }
+  
+  .text-section {
+    max-width: 600;
+  }
+  
+  .search-container {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .field {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .field label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 6px;
+  }
+  
+  .field input,
+  .field select {
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+  }
+  .field select{flex-grow: 9; width: 14em;}
+  #location{
+    display: flex;
+    flex-flow: 9;
+    width: 40em;
+  }
+  
+  .price-range {
+    display: flex;
+  }
+  
+  .search-btn {
+    padding: 12px 28px;
+    background: #e50914;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    align-self: flex-end;
+    width: 20em;
+  }
+  
+  .search-btn:hover {
+    background: #c40710;
+  }
+  .house-card-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .house-card-container h1 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  
+  .card-display {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  .house-card {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    position: relative;
+  }
+  
+  .house-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .image-slider {
+    position: relative;
+  }
+  
+  .image-slider img {
     width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #d32323;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  
+  .walkthrough {
+    position: absolute;
+    top: 35px;
+    left: 10px;
+    background: #4169e1;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  
+  .favorite {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: #fff;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  
+  .card-body {
+    padding: 12px;
+  }
+  
+  .card-body h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 5px 0;
+  }
+  
+  .card-body p {
+    font-size: 14px;
+    margin: 4px 0;
+    color: #333;
+  }
+  
+  .card-body span {
+    font-size: 13px;
+    color: #666;
+  }
+  
+  .see-more {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #0066cc;
+    text-decoration: none;
+  }
+
+.house-card .swiper-button-next, .house-card .swiper-button-prev {
+  width: 10px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12) !important;
+  top: 80% !important;  
+  transform: translateY(-50%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 20 !important;
+  opacity: 1 !important;   
 }
+
+.house-card .swiper-button-next::after,
+.house-card .swiper-button-prev::after {
+  font-size: 12px !important;          
+  color: #222 !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+.house-card .swiper-button-next { 
+    right: 8px !important; 
+}
+.house-card .swiper-button-prev { 
+    left: 8px !important; 
+}
+
+.house-card .swiper-button-next,
+.house-card .swiper-button-prev {
+  background-image: none !important;
+}
+
+/*
+.house-card .swiper-button-next,
+.house-card .swiper-button-prev {
+  opacity: 0;
+  transition: opacity .18s ease;
+}
+.house-card:hover .swiper-button-next,
+.house-card:hover .swiper-button-prev {
+  opacity: 1;
+}
+*/
+
+@media (max-width: 480px) {
+  .house-card .swiper-button-next,
+  .house-card .swiper-button-prev {
+    width: 22px !important;
+    height: 22px !important;
+  }
+  .house-card .swiper-button-next::after,
+  .house-card .swiper-button-prev::after {
+    font-size: 10px !important;
+  }
+}
+
+
+  
+  
