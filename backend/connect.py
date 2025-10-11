@@ -44,12 +44,13 @@ try:
     #create the db for realestate if it doesn't exist 
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS valerie (
-            id SERIAL PRIMARY KEY,
+            id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(100),
             username VARCHAR(100),
             email VARCHAR(100) unique(True),
-            password VARCHAR(100),
+            password VARCHAR(255),
             phone VARCHAR(100),
+            role ENUM('user', 'admin', 'agent') DEFAULT 'user',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
     ''')
@@ -63,6 +64,8 @@ try:
         location VARCHAR(100) NOT NULL,
         address VARCHAR(255),
         description TEXT,
+        category ENUM('rent', 'land', 'airbnb', 'sell', 'buy') NOT NULL DEFAULT 'sell',
+        status ENUM('active', 'sold', 'rented', 'occupied') NOT NULL DEFAULT 'active',
         image_url VARCHAR(500),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )

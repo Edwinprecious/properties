@@ -14,7 +14,12 @@ CORS(app)  # enable CORS so frontend can connect
 jwt = JWTManager(app)
 app.register_blueprint(admin_bp)
 
-app.config["SECRET_KEY"] = 'hghffjk'
+# app.config["SECRET_KEY"] = 'hghffjk'
+
+app.config["SECRET_KEY"] = 'your-super-secret-key-change-this-in-production'
+app.config["JWT_SECRET_KEY"] = 'your-super-secret-key-change-this-in-production'
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(hours=24)  # Token valid for 24 hours
+
 
 
 # DB config
@@ -70,7 +75,7 @@ def signup():
         # insert user into DB
         cursor.execute("""
             INSERT INTO valerie (name, email, password, phone, role)
-            VALUES (%s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s)
         """, (name, email, hashed_pw, phone, role))
 
         conn.commit()
@@ -98,12 +103,22 @@ def login():
     user = cursor.fetchone() 
     cursor.close() 
     conn.close() 
+
     if not user: 
         return jsonify({"error": "User not found"}), 404 
     # check password hash 
     if check_password_hash(user["password"], password):
         # access_token = create_access_token(identity=user["email"])
-        access_token = create_access_token(identity={"email": user["email"], "role": user["role"]})
+        # access_token = create_access_token(
+        #     identity={"email": str(user["email"]), 
+        #         "sub": str(user["email"]), "role": user["role"]})
+
+        access_token = create_access_token(
+            identity=user["email"],  # this becomes the "sub"
+            additional_claims={"role": user["role"]}  # this becomes a custom claim
+        )
+
+        print(access_token)
         return jsonify({"access_token": access_token, "role": user["role"], "success": True}), 200
 
     return jsonify({"error": "Invalid credentials"}), 401
@@ -116,13 +131,25 @@ def login():
 # =====================================
 @app.route('/api/properties', methods=['GET'])
 def get_properties():
+    category = request.args.get('category')  # Get category from query params
+    status = request.args.get('status', 'active')  # Default to active properties
+    
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM properties")
+    # Build query based on filters
+    if category and status:
+        cursor.execute("SELECT * FROM properties WHERE category = %s AND status = %s", (category, status))
+    elif category:
+        cursor.execute("SELECT * FROM properties WHERE category = %s", (category,))
+    elif status:
+        cursor.execute("SELECT * FROM properties WHERE status = %s", (status,))
+    else:
+        cursor.execute("SELECT * FROM properties")
+    
     properties = cursor.fetchall()
 
-    # attach extra images
+    # Attach extra images
     for prop in properties:
         cursor.execute("SELECT image_url FROM property_images WHERE property_id = %s", (prop["id"],))
         images = cursor.fetchall()
@@ -133,16 +160,6 @@ def get_properties():
 
     return jsonify({"data": properties})
 
-
-# @app.route('/api/properties/<int:prop_id>', methods=['GET'])
-# def get_property(prop_id):
-#     conn = get_db_connection()
-#     cursor = conn.cursor(dictionary=True)
-#     cursor.execute("SELECT * FROM properties WHERE id = %s", (prop_id,))
-#     data = cursor.fetchone()
-#     cursor.close()
-#     conn.close()
-#     return jsonify({"data": data})
 
 
 @app.route('/api/properties/<int:prop_id>', methods=['GET'])
@@ -166,27 +183,7 @@ def get_property(prop_id):
 
     return jsonify({"data": prop})
 
-# @app.route('/api/properties/location/<string:location>', methods=['GET'])
-# def get_properties_by_location(location):
-#     conn = get_db_connection()
-#     cursor = conn.cursor(dictionary=True)
 
-#     cursor.execute("SELECT * FROM properties WHERE location = %s", (location,))
-#     properties = cursor.fetchall()
-
-#     for prop in properties:
-#         # Fetch related images for each property
-#         cursor.execute(
-#             "SELECT image_url FROM property_images WHERE property_id = %s",
-#             (prop['id'],)
-#         )
-#         image_rows = cursor.fetchall()
-#         prop["images"] = [img["image_url"] for img in image_rows]
-#         prop["cover_image"] = prop["images"][0] if prop["images"] else None
-
-#     cursor.close()
-#     conn.close()
-#     return jsonify({"data": properties})
 
 
 @app.route('/api/properties/location/<string:location>', methods=['GET'])
