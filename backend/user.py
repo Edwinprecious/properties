@@ -69,8 +69,14 @@ def get_current_user_info():
     user = cursor.fetchone()
     cursor.close()
     conn.close()
+
+
+    if user:
+        user["role"] = role  # Include JWT role for comparison or logging
+
+    return user
     
-    return user    
+      
 
 
 # ==================================

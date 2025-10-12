@@ -84,25 +84,51 @@ try:
         )           
                    
     ''')
-    
 
-#     properties = [
-#     {
-#         "id": 1,
-#         "title": "Luxury Apartment",
-#         "price": 120000,
-#         "location": "Lagos",
-#         "image_url": "http://example.com/apt.jpg",
-#         "description": "3-bedroom flat in Lekki"
-#     },
-#     {
-#         "id": 2,
-#         "title": "Duplex",
-#         "price": 250000,
-#         "location": "Abuja",
-#         "image_url": "http://example.com/duplex.jpg",
-#         "description": "5-bedroom duplex in Maitama"
-#     }
+
+    # cursor.execute('''
+
+    #     CREATE TABLE IF NOT EXISTS favorites (
+    #     id INT AUTO_INCREMENT PRIMARY KEY,
+    #     user_id INT NOT NULL,
+    #     property_id INT NOT NULL,
+    #     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    #     FOREIGN KEY (user_id) REFERENCES valerie(id) ON DELETE CASCADE,
+    #     FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
+    #     )           
+                   
+    # ''')
+
+    # cursor.execute('''
+    #     CREATE TABLE IF NOT EXISTS inquiries (
+    #         id INT AUTO_INCREMENT PRIMARY KEY,
+    #         user_id INT NOT NULL,
+    #         property_id INT NOT NULL,
+    #         message TEXT NOT NULL,
+    #         user_name VARCHAR(100),
+    #         user_email VARCHAR(100),
+    #         user_phone VARCHAR(100),
+    #         status ENUM('pending', 'responded', 'closed') DEFAULT 'pending',
+    #         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    #         FOREIGN KEY (user_id) REFERENCES valerie(id) ON DELETE CASCADE,
+    #         FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
+    #     )
+    # ''')
+    
+    # print("✓ Table 'inquiries' created successfully!")
+    
+    
+    # cursor.execute('''
+    #     CREATE TABLE IF NOT EXISTS messages (
+    #         id INT AUTO_INCREMENT PRIMARY KEY,
+    #         inquiry_id INT NOT NULL,
+    #         message TEXT NOT NULL,
+    #         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    #         FOREIGN KEY (inquiry_id) REFERENCES inquiries(id) ON DELETE CASCADE
+    #     )
+    # ''')
+    
+    # print("✓ Table 'messages' created successfully!")
 
 # INSERT INTO properties (title, description, price, location)
 # VALUES 

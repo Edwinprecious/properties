@@ -6,6 +6,7 @@ from admin import admin_bp
 import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from user import user_bp
 
 
 app = Flask(__name__)
@@ -13,6 +14,7 @@ CORS(app)  # enable CORS so frontend can connect
 # JWTManager(app)
 jwt = JWTManager(app)
 app.register_blueprint(admin_bp)
+app.register_blueprint(user_bp)
 
 # app.config["SECRET_KEY"] = 'hghffjk'
 
