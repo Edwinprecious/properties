@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 import mysql.connector
+from email_service import send_inquiry_notification 
 
 #cursor.lastrowid: this is the id of the last row inserted
 
@@ -292,3 +293,223 @@ def get_user_profile():
     except Exception as e:
         print("Error fetching profile:", e)
         return jsonify({"error": "Something went wrong"}), 500        
+    
+
+
+# ==================================
+# Inquiry/Contact Routes
+# ==================================
+
+# Send inquiry about a property
+@user_bp.route("/api/inquiries", methods=["POST"])
+@jwt_required()
+def create_inquiry():
+    try:
+        user_id = get_current_user_id()
+        # role = get_current_user_role()
+        
+        if not user_id :
+            return jsonify({"error": "User not found"}), 404
+
+        data = request.json
+        property_id = data.get("property_id")
+        message = data.get("message")
+        user_name = data.get("user_name")
+        user_email = data.get("user_email")
+        user_phone = data.get("user_phone")
+
+        # Validation
+        if not property_id or not message:
+            return jsonify({"error": "property_id and message are required"}), 400
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        #Check if property exists
+        cursor.execute("SELECT * FROM properties WHERE id = %s", (property_id,))
+        property_data = cursor.fetchone()
+        if not property_data:
+            cursor.close()
+            conn.close()
+            return jsonify({"error": "Property not found"}), 404
+        
+        # Get user details
+        cursor.execute("SELECT name, email, phone FROM valerie WHERE id = %s", (user_id,))
+        user_data = cursor.fetchone()
+
+        # Insert inquiry
+        cursor.execute("""
+            INSERT INTO inquiries (user_id, property_id, message, user_name, user_email, user_phone, status)
+            VALUES (%s, %s, %s, %s, %s, %s, 'pending')
+        """, (user_id, property_id, message, user_name, user_email, user_phone))
+
+        inquiry_id = cursor.lastrowid
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+
+         # Send email notifications (non-blocking)
+        try:
+            send_inquiry_notification(
+                user_data={
+                    'name': user_name or user_data['name'],
+                    'email': user_email or user_data['email'],
+                    'phone': user_phone or user_data['phone']
+                },
+                property_data=property_data,
+                inquiry_message=message
+            )
+        except Exception as e:
+            print(f"Failed to send inquiry email: {e}")
+            # Don't fail the inquiry if email fails
+
+        return jsonify({
+            "status": "success", 
+            "message": "Inquiry sent successfully",
+            "inquiry_id": inquiry_id
+        }), 201
+
+    except Exception as e:
+        print("Error creating inquiry:", e)
+        return jsonify({"error": "Something went wrong"}), 500
+    
+
+
+# Get user's inquiry history
+@user_bp.route("/api/inquiries", methods=["GET"])
+@jwt_required()
+def get_user_inquiries():
+    try:
+        user_id = get_current_user_id()
+        
+        if not user_id:
+            return jsonify({"error": "User not found"}), 404
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+         # Get all inquiries made by this user with property details
+        cursor.execute("""
+            SELECT 
+                i.id,
+                i.message,
+                i.status,
+                i.created_at,
+                p.id as property_id,
+                p.title as property_title,
+                p.location as property_location,
+                p.price as property_price,
+                p.image_url as property_image
+            FROM inquiries i
+            JOIN properties p ON i.property_id = p.id
+            WHERE i.user_id = %s
+            ORDER BY i.created_at DESC
+        """, (user_id,))
+
+        inquiries = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+        return jsonify({"data": inquiries}), 200
+
+    except Exception as e:
+        print("Error fetching inquiries:", e)
+        return jsonify({"error": "Something went wrong"}), 500
+
+
+
+# Get single inquiry details
+@user_bp.route("/api/inquiries/<int:inquiry_id>", methods=["GET"])
+@jwt_required()
+def get_inquiry(inquiry_id):
+    try:
+        user_id = get_current_user_id()
+        role = get_current_user_role()
+        
+        if not user_id:
+            return jsonify({"error": "User not found"}), 404
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        # Get inquiry with property details
+        cursor.execute("""
+            SELECT 
+                i.*,
+                p.title as property_title,
+                p.location as property_location,
+                p.price as property_price,
+                p.image_url as property_image
+            FROM inquiries i
+            JOIN properties p ON i.property_id = p.id
+            WHERE i.id = %s
+        """, (inquiry_id,))
+        
+        inquiry = cursor.fetchone()
+        
+        if not inquiry:
+            cursor.close()
+            conn.close()
+            return jsonify({"error": "Inquiry not found"}), 404
+        
+        # Only allow user to view their own inquiries (unless admin)
+        if inquiry["user_id"] != user_id and role != "admin":
+            cursor.close()
+            conn.close()
+            return jsonify({"error": "Unauthorized"}), 403
+
+        cursor.close()
+        conn.close()
+
+        return jsonify({"data": inquiry}), 200
+
+    except Exception as e:
+        print("Error fetching inquiry:", e)
+        return jsonify({"error": "Something went wrong"}), 500
+    
+
+
+# Delete inquiry (user can delete their own inquiries)
+@user_bp.route("/api/inquiries/<int:inquiry_id>", methods=["DELETE"])
+@jwt_required()
+def delete_inquiry(inquiry_id):
+    try:
+        user_id = get_current_user_id()
+        role = get_current_user_role()
+        
+        if not user_id:
+            return jsonify({"error": "User not found"}), 404
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        # Check if inquiry exists and belongs to user
+        cursor.execute("SELECT user_id FROM inquiries WHERE id = %s", (inquiry_id,))
+        inquiry = cursor.fetchone()
+
+        if not inquiry:
+            cursor.close()
+            conn.close()
+            return jsonify({"error": "Inquiry not found"}), 404
+
+        # Only allow user to delete their own inquiries (unless admin)
+        if inquiry["user_id"] != user_id and role != "admin":
+            cursor.close()
+            conn.close()
+            return jsonify({"error": "Unauthorized"}), 403
+
+        # Delete inquiry
+        cursor.execute("DELETE FROM inquiries WHERE id = %s", (inquiry_id,))
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return jsonify({
+            "status": "success",
+            "message": "Inquiry deleted successfully"
+        }), 200
+    
+    except Exception as e:
+        print("Error deleting inquiry:", e)
+        return jsonify({"error": "Something went wrong"}), 500
