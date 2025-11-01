@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import "./Navbar.css";
+import { Link } from "react-router-dom";
+
 
 const Navbar = () => {
   const [openDropdown, setDropdown] = useState(null)
@@ -72,6 +74,10 @@ const Navbar = () => {
 
             <li className='nav-item'><a href="#">LOAN</a></li>
             <li className='nav-item'><a href="#">LOCATION</a></li>
+            <li className='nav-item'>
+              <Link to="/properties">PROPERTIES</Link>
+            </li>
+
           </ul>
         </section>
       </nav>

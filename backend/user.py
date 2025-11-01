@@ -175,7 +175,9 @@ def get_favorites():
             JOIN properties p ON f.property_id = p.id
             WHERE f.user_id = %s
             ORDER BY f.created_at DESC
-        """, (user_id,))
+                       
+        """, 
+        (user_id,))
         
         favorites = cursor.fetchall()
 

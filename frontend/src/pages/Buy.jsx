@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 // import { FaFacebook } from 'react-icons/fa';
 import "./Buy.css"
 import ScanCode from "../components/ScanCode"

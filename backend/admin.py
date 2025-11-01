@@ -12,11 +12,12 @@ admin_bp = Blueprint("admin", __name__)
 # Database connection helper
 DB_NAME = 'real_estate'
 DB_USER = 'root'
-DB_PASSWORD = 'Udechukwu2002.'
+DB_PASSWORD = 'chris@33'
 DB_HOST = 'localhost'
 DB_PORT = '3306'
 
 def get_db_connection(db_name=DB_NAME):
+    
     return mysql.connector.connect(
         database=db_name,
         user=DB_USER,

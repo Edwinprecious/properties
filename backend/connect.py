@@ -3,7 +3,7 @@ import mysql.connector
 
 DB_NAME= 'real_estate'
 DB_USER= 'root' 
-DB_PASSWORD="Udechukwu2002."
+DB_PASSWORD="chris@33"
 DB_HOST="localhost"
 DB_PORT="3306"
 

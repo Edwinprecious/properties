@@ -1,34 +1,39 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+
 import Home from './pages/Home';
-import Navbar from './components/Navbar';   // keep consistent casing
+import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Signup from './pages/SignUp';
 import Login from './pages/Login';
-import { Buy } from "./pages/Buy";
-import { Housebuy } from './Housebuy';
-// import ForgotPassword from './pages/ForgotPassword';
-// import BuyNavbar from './pages/BuyNavbar';
+import { Buy } from './pages/Buy.jsx';
+import { Housebuy } from './pages/Housebuy.jsx';
+import ListPage from './pages/Listpage/ListPage.jsx';
+
+
+import Properties from './components/Properties';
+import Filter from "./components/filter/Filter.jsx"; 
+
+
+
 
 function Layout({ children }) {
   const location = useLocation();
 
-  // List of routes where you don't want navbar/footer
-  const authRoutes = ["/signup", "/login", "/forgot-password", "Housebuy"];
-
+  const authRoutes = ["/signup", "/login", "/forgot-password", "/Housebuy"];
   const hideLayout = authRoutes.includes(location.pathname);
 
   return (
     <>
       {!hideLayout && <Navbar />}
       {children}
-      {!hideLayout && <Footer />}
+      {/* {!hideLayout && <Footer />} */}
     </>
   );
 }
 
 function App() {
   return (
-    
     <Router>
       <Layout>
         <Routes>
@@ -37,8 +42,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/buy" element={<Buy />} />
           <Route path="/HouseforSale" element={<Housebuy />} />
-          {/* <Route path="/buyNavbar" element={<BuyNavbar />} /> */}
-          {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
+          <Route path="/properties" element={<Properties />} />
+          <Route path="/listpage" element={<ListPage />} />
         </Routes>
       </Layout>
     </Router>

@@ -1,0 +1,60 @@
+.filter{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    
+    h1{
+        font-size: 24px;
+        font-weight: 300;
+    }
+    
+    .item{
+        display: flex;
+        gap: 2px;  // Add px unit
+        flex-direction: column;
+        
+        label{
+            font-size: 10px;
+        }
+        
+        input, select{
+            width: 100%;  // Changed from 100px
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            font-size: 14px;
+            border-radius: 5px;
+        }
+    }
+    
+    .top{
+        input{
+            width: 100%;
+        }
+    }
+    
+    .bottom{  // Fixed typo from .buttom
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;  // Add this
+        gap: 20px;
+        flex-wrap: wrap;  // Add this
+        
+        button{
+            width: 50px;  // Changed from 100px
+            height: 50px;  // Add fixed height
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            background-color: rgb(138, 5, 138);
+            border-radius: 5px;  // Add this
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            img{
+                width: 24px;
+                height: 24px;
+            }
+        }
+    }
+}

@@ -1,0 +1,25 @@
+.listpage{
+    display: flex;
+    height: 100%;
+    
+    .listContainer{
+        flex: 3;
+        overflow-y: auto;  // Changed from overflow on wrapper
+        
+        .wrapper{
+            height: 100%;
+            padding: 20px 50px 20px 20px;  // Add padding
+            display: flex;
+            flex-direction: column;
+            gap: 30px;  // Reduced from 50px
+            overflow-y: scroll;
+            padding-bottom: 50px;
+        }
+    }
+    
+    .mapContainer{
+        flex: 2;  // Changed from 3
+        height: 100%;
+        background-color: antiquewhite;
+    }
+}
