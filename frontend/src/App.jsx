@@ -5,6 +5,12 @@ import Footer from './components/Footer';
 import Signup from './pages/SignUp';
 import Login from './pages/Login';
 import { Buy } from "./pages/Buy";
+import AdminDashboard from './pages/admin/Dashboard';
+import ManageProperties from './pages/admin/ManageProperties';
+import AddProperty from './pages/admin/AddProperty';
+import EditProperty from './pages/admin/EditProperty';
+import ManageInquiries from './pages/admin/ManageInquiries';
+import AdminRoute from './components/AdminRoute';
 // import ForgotPassword from './pages/ForgotPassword';
 // import BuyNavbar from './pages/BuyNavbar';
 
@@ -34,6 +40,12 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/buy" element={<Buy />} />
+          {/* <Route path="/admin/dashboard" element={<AdminDashboard />} /> */}
+          <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/admin/properties" element={<AdminRoute><ManageProperties /></AdminRoute>} />
+          <Route path="/admin/properties/add" element={<AdminRoute><AddProperty /></AdminRoute>} />
+          <Route path="/admin/properties/edit/:id" element={<AdminRoute><EditProperty /></AdminRoute>} />
+          <Route path="/admin/inquiries" element={<AdminRoute><ManageInquiries /></AdminRoute>} />
           {/* <Route path="/buyNavbar" element={<BuyNavbar />} /> */}
           {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
         </Routes>
