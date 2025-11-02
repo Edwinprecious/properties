@@ -23,7 +23,7 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(hours=24)
 # DB config
 DB_NAME = 'real_estate'
 DB_USER = 'root'
-DB_PASSWORD = 'chris@33'
+DB_PASSWORD = 'Udechukwu2002.'
 DB_HOST = 'localhost'
 DB_PORT = '3306'
 
