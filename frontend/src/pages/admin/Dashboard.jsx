@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './AdminDashboard.css'
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -16,28 +17,45 @@ const AdminDashboard = () => {
       const token = localStorage.getItem('access_token');
       
       if (!token) {
+        console.log('No token found, redirecting to login');
         navigate('/login');
         return;
       }
 
-      const response = await fetch('http://127.0.0.1:5000/api/admin/dashboard/stats', {
+      console.log('Fetching dashboard stats...');
+      
+      // ✅ Use localhost:5000 (match your Flask server)
+      const response = await fetch('http://localhost:5000/api/admin/dashboard/stats', {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
 
+      console.log('Response status:', response.status);
+
       if (response.status === 403) {
+        alert('Access denied. Admin only.');
         navigate('/unauthorized');
         return;
       }
 
+      if (response.status === 401) {
+        alert('Session expired. Please login again.');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_role');
+        navigate('/login');
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('Failed to fetch stats');
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('Dashboard data:', data);
       setStats(data);
     } catch (err) {
+      console.error('Error fetching stats:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -47,7 +65,10 @@ const AdminDashboard = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+        </div>
       </div>
     );
   }
@@ -56,8 +77,14 @@ const AdminDashboard = () => {
     return (
       <div className="p-6">
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          <p className="font-bold">Error</p>
+          <p className="font-bold">Error Loading Dashboard</p>
           <p>{error}</p>
+          <button
+            onClick={fetchDashboardStats}
+            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Try Again
+          </button>
         </div>
       </div>
     );
@@ -105,13 +132,6 @@ const AdminDashboard = () => {
                 <span className="text-2xl">👥</span>
               </div>
             </div>
-            <div className="flex gap-2 mt-4 text-sm text-gray-500">
-              {stats?.users?.by_role?.map((role, idx) => (
-                <span key={idx}>
-                  {role.role}: {role.count}
-                </span>
-              ))}
-            </div>
           </div>
 
           {/* Total Inquiries */}
@@ -126,13 +146,6 @@ const AdminDashboard = () => {
               <div className="bg-yellow-100 rounded-full p-3">
                 <span className="text-2xl">💬</span>
               </div>
-            </div>
-            <div className="flex gap-2 mt-4 text-sm text-gray-500">
-              {stats?.inquiries?.by_status?.map((status, idx) => (
-                <span key={idx}>
-                  {status.status}: {status.count}
-                </span>
-              ))}
             </div>
           </div>
 
@@ -176,63 +189,38 @@ const AdminDashboard = () => {
           </button>
         </div>
 
-        {/* Properties by Category */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold mb-4">Properties by Category</h3>
-            <div className="space-y-3">
-              {stats?.properties?.by_category?.map((cat, idx) => (
-                <div key={idx} className="flex items-center justify-between">
-                  <span className="text-gray-700 capitalize">{cat.category}</span>
-                  <span className="font-semibold text-gray-900">{cat.count}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold mb-4">Top Locations</h3>
-            <div className="space-y-3">
-              {stats?.locations?.top_locations?.slice(0, 5).map((loc, idx) => (
-                <div key={idx} className="flex items-center justify-between">
-                  <span className="text-gray-700">{loc.location}</span>
-                  <span className="font-semibold text-gray-900">{loc.count} properties</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* Recent Properties */}
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
-          <h3 className="text-lg font-semibold mb-4">Recent Properties</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 text-gray-600 font-medium">Title</th>
-                  <th className="text-left py-3 px-4 text-gray-600 font-medium">Location</th>
-                  <th className="text-left py-3 px-4 text-gray-600 font-medium">Price</th>
-                  <th className="text-left py-3 px-4 text-gray-600 font-medium">Category</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stats?.properties?.recent?.map((prop) => (
-                  <tr key={prop.id} className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4 text-gray-900">{prop.title}</td>
-                    <td className="py-3 px-4 text-gray-600">{prop.location}</td>
-                    <td className="py-3 px-4 text-gray-900">₦{prop.price?.toLocaleString()}</td>
-                    <td className="py-3 px-4">
-                      <span className="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded capitalize">
-                        {prop.category}
-                      </span>
-                    </td>
+        {stats?.properties?.recent && stats.properties.recent.length > 0 && (
+          <div className="bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold mb-4">Recent Properties</h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-3 px-4 text-gray-600 font-medium">Title</th>
+                    <th className="text-left py-3 px-4 text-gray-600 font-medium">Location</th>
+                    <th className="text-left py-3 px-4 text-gray-600 font-medium">Price</th>
+                    <th className="text-left py-3 px-4 text-gray-600 font-medium">Category</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {stats.properties.recent.map((prop) => (
+                    <tr key={prop.id} className="border-b hover:bg-gray-50">
+                      <td className="py-3 px-4 text-gray-900">{prop.title}</td>
+                      <td className="py-3 px-4 text-gray-600">{prop.location}</td>
+                      <td className="py-3 px-4 text-gray-900">₦{prop.price?.toLocaleString()}</td>
+                      <td className="py-3 px-4">
+                        <span className="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded capitalize">
+                          {prop.category}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
