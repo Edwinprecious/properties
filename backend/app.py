@@ -125,7 +125,7 @@ def login():
     conn.close() 
 
     if not user: 
-        return jsonify({"error": "User not found"}), 404 
+        return jsonify({"error": "Invalid credentials"}), 401 
     # check password hash 
     if check_password_hash(user["password"], password):
         # access_token = create_access_token(identity=user["email"])
@@ -631,6 +631,37 @@ def forgot_password():
         return jsonify({"error": "Something went wrong"}), 500
     
 
+
+@app.route("/api/verify-reset-token/<token>", methods=["GET"])
+def verify_token(token):
+    """
+    Check if a reset token is valid
+    """
+    try:
+        from password_reset import verify_reset_token
+        
+        valid, user_id, message = verify_reset_token(token)
+        
+        if valid:
+            return jsonify({
+                "status": "success",
+                "valid": True,
+                "message": "Token is valid"
+            }), 200
+        else:
+            return jsonify({
+                "status": "error",
+                "valid": False,
+                "message": message
+            }), 400
+    
+    except Exception as e:
+        print("Error verifying token:", e)
+        return jsonify({
+            "status": "error",
+            "valid": False,
+            "error": "Something went wrong"
+        }), 500
 
 
 
