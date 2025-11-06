@@ -1,0 +1,709 @@
+# Complete React Frontend Page Structure
+## Real Estate Property Management System
+
+---
+
+## 📱 PUBLIC PAGES (No Authentication Required)
+
+### 1. Home Page - `/`
+**Purpose:** Landing page with overview and featured content
+
+**Features:**
+- Hero section with search bar
+- Featured properties showcase
+- Property categories (Rent, Sell, Land, Airbnb, Buy)
+- Platform statistics (total properties, locations, users)
+- Testimonials/Reviews section
+- Call-to-action buttons
+- Footer with links
+
+**Backend API:**
+- `GET /api/properties` (for featured properties)
+- `GET /api/admin/dashboard/stats` (for statistics - if public)
+
+---
+
+### 2. Properties Listing Page - `/properties`
+**Purpose:** Browse all available properties with filters
+
+**Features:**
+- Grid/List view toggle
+- Search bar (by title, description, location)
+- Filter panel:
+  - Category (rent, sell, land, airbnb, buy)
+  - Location dropdown
+  - Price range (min/max)
+  - Bedrooms count
+  - Bathrooms count
+  - Status (active, sold, rented)
+- Sort options:
+  - Price (low to high, high to low)
+  - Date (newest first, oldest first)
+  - Title (A-Z, Z-A)
+- Pagination controls
+- Property cards showing:
+  - Image
+  - Title
+  - Location
+  - Price
+  - Category badge
+  - Bedrooms/Bathrooms icons
+
+**Backend API:**
+- `GET /api/properties?category=...&search=...&min_price=...&max_price=...&bedrooms=...&bathrooms=...&sort_by=...&sort_order=...&page=...&per_page=...`
+
+---
+
+### 3. Single Property Details Page - `/properties/:slug`
+**Purpose:** View detailed information about a specific property
+
+**Features:**
+- Image gallery/carousel with thumbnails
+- Property title and price (prominent)
+- Location with map icon
+- Property details section:
+  - Bedrooms, Bathrooms
+  - Category, Status
+  - Address
+  - Square footage (if available)
+- Full description
+- Amenities/Features list
+- Contact form/Inquiry section
+- "Add to Favorites" button (if logged in)
+- Share buttons (social media)
+- Related/Similar properties section
+- Breadcrumb navigation
+
+**Backend API:**
+- `GET /api/properties/slug/:slug`
+- `GET /api/properties/slug/:slug/related`
+- `POST /api/inquiries` (when user submits inquiry)
+- `POST /api/favorites` (when user favorites property)
+- `GET /api/favorites/check/:property_id` (check if favorited)
+
+---
+
+### 4. Properties by Location - `/properties/location/:location`
+**Purpose:** View all properties in a specific location
+
+**Features:**
+- Same as Properties Listing Page
+- Location name in header
+- Pre-filtered by location
+- Option to change location
+
+**Backend API:**
+- `GET /api/properties/location/:location`
+
+---
+
+### 5. Login Page - `/login`
+**Purpose:** User authentication
+
+**Features:**
+- Email input field
+- Password input field (with show/hide toggle)
+- "Remember me" checkbox
+- "Forgot Password?" link
+- Login button
+- "Don't have an account? Sign up" link
+- Error messages display
+- Success redirect to dashboard
+
+**Backend API:**
+- `POST /api/login`
+
+**Response:**
+```json
+{
+  "access_token": "...",
+  "role": "user/admin/agent",
+  "success": true
+}
+```
+
+---
+
+### 6. Signup Page - `/signup`
+**Purpose:** New user registration
+
+**Features:**
+- Name input field
+- Email input field
+- Phone number input field
+- Password input field (with strength indicator)
+- Confirm password field
+- Role selection (optional - user/agent)
+- Terms & conditions checkbox
+- Signup button
+- "Already have an account? Login" link
+- Email verification notice
+- Success message
+
+**Backend API:**
+- `POST /api/signup`
+
+**Request Body:**
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "phone": "1234567890",
+  "password": "password123",
+  "confirm_password": "password123",
+  "role": "user"
+}
+```
+
+---
+
+### 7. Forgot Password Page - `/forgot-password`
+**Purpose:** Request password reset
+
+**Features:**
+- Email input field
+- Instructions text
+- Submit button
+- Success message ("Check your email")
+- Back to login link
+- Email sent confirmation
+
+**Backend API:**
+- `POST /api/forgot-password`
+
+---
+
+### 8. Reset Password Page - `/reset-password?token=...`
+**Purpose:** Set new password using reset token
+
+**Features:**
+- Token validation on page load
+- New password input field (with strength indicator)
+- Confirm password input field
+- Submit button
+- Password requirements display
+- Success message
+- Redirect to login after success
+- Invalid/expired token error handling
+
+**Backend API:**
+- `GET /api/verify-reset-token/:token` (verify token on load)
+- `POST /api/reset-password` (submit new password)
+
+---
+
+## 🔐 USER PAGES (Authentication Required)
+
+### 9. User Dashboard - `/dashboard` or `/user/dashboard`
+**Purpose:** User's main control panel
+
+**Features:**
+- Welcome message with user name
+- Quick stats cards:
+  - Total favorites
+  - Total inquiries
+  - Inquiry status breakdown
+- Recent activity timeline
+- Quick action buttons:
+  - Browse properties
+  - View favorites
+  - View inquiries
+- Shortcut links
+
+**Backend API:**
+- `GET /api/user/profile` (user info)
+- `GET /api/favorites` (count)
+- `GET /api/inquiries` (count and status)
+
+---
+
+### 10. My Favorites Page - `/favorites` or `/user/favorites`
+**Purpose:** View and manage saved properties
+
+**Features:**
+- Grid of favorited properties
+- Each property card shows:
+  - Image
+  - Title, location, price
+  - Date added to favorites
+  - "View Details" button
+  - "Remove from Favorites" button
+- Empty state if no favorites
+- Filter/sort options
+- Search within favorites
+
+**Backend API:**
+- `GET /api/favorites`
+- `DELETE /api/favorites/:property_id`
+
+---
+
+### 11. My Inquiries Page - `/inquiries` or `/user/inquiries`
+**Purpose:** View inquiry history
+
+**Features:**
+- List of all inquiries sent
+- Each inquiry shows:
+  - Property thumbnail and title
+  - Inquiry message
+  - Date sent
+  - Status badge (pending/responded/closed)
+  - Property link
+- Filter by status
+- Sort by date
+- View inquiry details modal
+- Delete inquiry option
+
+**Backend API:**
+- `GET /api/inquiries`
+- `GET /api/inquiries/:id`
+- `DELETE /api/inquiries/:id`
+
+---
+
+### 12. User Profile Page - `/profile` or `/user/profile`
+**Purpose:** View and edit account information
+
+**Features:**
+- Profile information display/edit:
+  - Name
+  - Email
+  - Phone
+  - Role (display only)
+- Change password section
+- Account statistics
+- Delete account option (with confirmation)
+- Update profile button
+- Success/error messages
+
+**Backend API:**
+- `GET /api/user/profile`
+- `PUT /api/user/profile` (to be added)
+- `PUT /api/user/change-password` (to be added)
+
+---
+
+## 👑 ADMIN PAGES (Admin Authentication Required)
+
+### 13. Admin Dashboard - `/admin/dashboard`
+**Purpose:** Admin overview and analytics
+
+**Features:**
+- Statistics cards:
+  - Total properties (with breakdown by category)
+  - Total users (with breakdown by role)
+  - Total inquiries (with status breakdown)
+  - Total favorites
+  - Total property value
+- Charts and graphs:
+  - Properties by category (pie chart)
+  - Monthly growth (line chart)
+  - Top locations (bar chart)
+- Recent activities:
+  - Latest properties added
+  - Recent user registrations
+  - Recent inquiries
+  - Most favorited properties
+- Quick action buttons
+
+**Backend API:**
+- `GET /api/admin/dashboard/stats`
+- `GET /api/admin/dashboard/monthly-stats`
+
+---
+
+### 14. Manage Properties Page - `/admin/properties`
+**Purpose:** View and manage all properties
+
+**Features:**
+- Data table with columns:
+  - Image thumbnail
+  - Title
+  - Location
+  - Price
+  - Category
+  - Status
+  - Created date
+  - Actions (Edit/Delete)
+- Search bar
+- Filter by category/status
+- Sort options
+- Pagination
+- "Add New Property" button (prominent)
+- Bulk actions (delete multiple)
+- View property statistics
+
+**Backend API:**
+- `GET /api/properties`
+- `DELETE /api/admin/properties/:id`
+
+---
+
+### 15. Add Property Page - `/admin/properties/add`
+**Purpose:** Create new property listing
+
+**Features:**
+- Multi-step form or single long form:
+  
+  **Basic Information:**
+  - Title (required)
+  - Price (required)
+  - Location (required)
+  - Address
+  - Category dropdown (required)
+  - Status dropdown
+  
+  **Property Details:**
+  - Bedrooms (number)
+  - Bathrooms (number)
+  - Square footage
+  - Description (rich text editor)
+  
+  **Images:**
+  - Cover image upload
+  - Multiple additional images upload
+  - Image preview
+  - Drag-and-drop support
+  - Delete uploaded images
+  
+- Form validation
+- Submit button
+- Cancel button
+- Success message with redirect
+
+**Backend API:**
+- `POST /api/admin/properties`
+- `POST /api/admin/upload-image` (for single image)
+- `POST /api/admin/upload-images` (for multiple images)
+
+---
+
+### 16. Edit Property Page - `/admin/properties/edit/:id`
+**Purpose:** Update existing property
+
+**Features:**
+- Same form as Add Property but pre-filled
+- Load existing property data
+- Update images (add/remove)
+- Show current images with delete option
+- Save changes button
+- Cancel button
+- Delete property button (with confirmation)
+
+**Backend API:**
+- `GET /api/properties/:id` (load property data)
+- `PUT /api/admin/properties/:id`
+- `POST /api/admin/upload-image`
+- `DELETE /api/admin/delete-image`
+- `DELETE /api/admin/properties/:id`
+
+---
+
+### 17. Manage Inquiries Page - `/admin/inquiries`
+**Purpose:** View and respond to user inquiries
+
+**Features:**
+- Data table with columns:
+  - User name/email
+  - Property title
+  - Message preview
+  - Status
+  - Date received
+  - Actions
+- Filter by status (pending/responded/closed)
+- Search inquiries
+- View full inquiry details modal
+- Update inquiry status dropdown
+- Mark as responded/closed
+- Delete inquiry
+- Contact user button (email)
+- Pagination
+
+**Backend API:**
+- `GET /api/admin/inquiries`
+- `GET /api/admin/inquiries?status=pending`
+- `PUT /api/admin/inquiries/:id` (update status)
+- `DELETE /api/admin/inquiries/:id`
+
+---
+
+### 18. Manage Users Page - `/admin/users` (Optional - Future)
+**Purpose:** View and manage registered users
+
+**Features:**
+- User list table:
+  - Name
+  - Email
+  - Phone
+  - Role
+  - Registration date
+  - Status (active/inactive)
+- View user details
+- View user activity (favorites, inquiries)
+- Change user role
+- Deactivate/activate user
+- Search and filter users
+
+**Backend API:**
+- To be implemented:
+  - `GET /api/admin/users`
+  - `GET /api/admin/dashboard/user-stats/:id`
+  - `PUT /api/admin/users/:id`
+
+---
+
+## 🔧 UTILITY PAGES
+
+### 19. 404 Not Found Page - `*` (catch-all route)
+**Purpose:** Handle invalid URLs
+
+**Features:**
+- Friendly error message
+- "Page not found" heading
+- Illustration/icon
+- "Go back to Home" button
+- Search bar (optional)
+- Popular pages links
+
+---
+
+### 20. Unauthorized Page - `/unauthorized`
+**Purpose:** Handle unauthorized access attempts
+
+**Features:**
+- Access denied message
+- Explanation text
+- "Go to Login" button
+- "Go to Home" button
+- Contact admin link (if needed)
+
+---
+
+## 📊 NAVIGATION STRUCTURE
+
+### Public Header Navigation:
+- Logo (links to home)
+- Properties
+- About Us (optional)
+- Contact (optional)
+- Login
+- Signup
+
+### Authenticated User Header:
+- Logo (links to home)
+- Properties
+- Dashboard
+- Favorites
+- Inquiries
+- Profile dropdown:
+  - My Profile
+  - Settings
+  - Logout
+
+### Admin Header:
+- Logo (links to home)
+- Admin Dashboard
+- Manage Properties
+- Manage Inquiries
+- Manage Users
+- Profile dropdown:
+  - Settings
+  - Logout
+
+---
+
+## 🗂️ SUGGESTED FOLDER STRUCTURE
+
+```
+src/
+├── pages/
+│   ├── public/
+│   │   ├── HomePage.jsx
+│   │   ├── PropertiesPage.jsx
+│   │   ├── PropertyDetailPage.jsx
+│   │   ├── LoginPage.jsx
+│   │   ├── SignupPage.jsx
+│   │   ├── ForgotPasswordPage.jsx
+│   │   └── ResetPasswordPage.jsx
+│   ├── user/
+│   │   ├── Dashboard.jsx
+│   │   ├── FavoritesPage.jsx
+│   │   ├── InquiriesPage.jsx
+│   │   └── ProfilePage.jsx
+│   ├── admin/
+│   │   ├── Dashboard.jsx
+│   │   ├── ManagePropertiesPage.jsx
+│   │   ├── AddPropertyPage.jsx
+│   │   ├── EditPropertyPage.jsx
+│   │   └── ManageInquiriesPage.jsx
+│   └── utility/
+│       ├── NotFoundPage.jsx
+│       └── UnauthorizedPage.jsx
+├── components/
+│   ├── layout/
+│   │   ├── Navbar.jsx
+│   │   ├── Footer.jsx
+│   │   ├── Sidebar.jsx
+│   │   └── Layout.jsx
+│   ├── property/
+│   │   ├── PropertyCard.jsx
+│   │   ├── PropertyGrid.jsx
+│   │   ├── PropertyDetails.jsx
+│   │   ├── PropertyGallery.jsx
+│   │   └── RelatedProperties.jsx
+│   ├── forms/
+│   │   ├── SearchBar.jsx
+│   │   ├── FilterPanel.jsx
+│   │   ├── InquiryForm.jsx
+│   │   └── PropertyForm.jsx
+│   ├── common/
+│   │   ├── Button.jsx
+│   │   ├── Input.jsx
+│   │   ├── Modal.jsx
+│   │   ├── Loading.jsx
+│   │   ├── ErrorMessage.jsx
+│   │   └── Pagination.jsx
+│   └── auth/
+│       ├── ProtectedRoute.jsx
+│       └── AdminRoute.jsx
+├── services/
+│   ├── api.js
+│   ├── authService.js
+│   ├── propertyService.js
+│   └── userService.js
+├── context/
+│   ├── AuthContext.jsx
+│   └── PropertyContext.jsx
+├── hooks/
+│   ├── useAuth.js
+│   ├── useProperties.js
+│   └── useFavorites.js
+├── utils/
+│   ├── helpers.js
+│   ├── validators.js
+│   └── constants.js
+├── styles/
+│   └── global.css
+├── App.jsx
+└── main.jsx
+```
+
+---
+
+## 🚀 DEVELOPMENT PRIORITY
+
+### Phase 1: MVP (Minimum Viable Product)
+1. Home Page
+2. Properties Listing
+3. Property Details
+4. Login/Signup
+5. Basic User Dashboard
+
+### Phase 2: User Features
+6. Favorites functionality
+7. Inquiry system
+8. User Profile
+9. Password reset
+
+### Phase 3: Admin Features
+10. Admin Dashboard
+11. Add/Edit Properties
+12. Manage Inquiries
+13. Image uploads
+
+### Phase 4: Polish & Optimization
+14. Advanced search/filters
+15. Related properties
+16. Responsive design refinement
+17. Performance optimization
+18. Error handling
+19. Loading states
+20. SEO optimization
+
+---
+
+## 📋 BACKEND API ENDPOINTS SUMMARY
+
+### Public Endpoints:
+- `GET /api/properties`
+- `GET /api/properties/:id`
+- `GET /api/properties/slug/:slug`
+- `GET /api/properties/slug/:slug/related`
+- `GET /api/properties/location/:location`
+- `POST /api/signup`
+- `POST /api/login`
+- `POST /api/forgot-password`
+- `GET /api/verify-reset-token/:token`
+- `POST /api/reset-password`
+
+### User Endpoints (Auth Required):
+- `GET /api/user/profile`
+- `GET /api/favorites`
+- `POST /api/favorites`
+- `DELETE /api/favorites/:property_id`
+- `GET /api/favorites/check/:property_id`
+- `GET /api/inquiries`
+- `POST /api/inquiries`
+- `GET /api/inquiries/:id`
+- `DELETE /api/inquiries/:id`
+
+### Admin Endpoints (Admin Auth Required):
+- `GET /api/admin/dashboard/stats`
+- `GET /api/admin/dashboard/monthly-stats`
+- `POST /api/admin/properties`
+- `PUT /api/admin/properties/:id`
+- `DELETE /api/admin/properties/:id`
+- `POST /api/admin/upload-image`
+- `POST /api/admin/upload-images`
+- `DELETE /api/admin/delete-image`
+- `GET /api/admin/inquiries`
+- `PUT /api/admin/inquiries/:id`
+- `DELETE /api/admin/inquiries/:id`
+
+---
+
+## 💡 TIPS FOR IMPLEMENTATION
+
+1. **Start with routing:** Set up React Router with all routes first
+2. **Create reusable components:** PropertyCard, Button, Input, etc.
+3. **Set up authentication context:** Manage user state globally
+4. **API service layer:** Centralize all API calls in service files
+5. **Error handling:** Implement consistent error handling across the app
+6. **Loading states:** Show loading indicators for async operations
+7. **Form validation:** Use libraries like Formik or React Hook Form
+8. **Responsive design:** Mobile-first approach with Tailwind CSS
+9. **State management:** Consider Redux if app becomes complex
+10. **Testing:** Write tests as you build features
+
+---
+
+## 📞 ADDITIONAL CONSIDERATIONS
+
+### Optional Pages to Add Later:
+- About Us page
+- Contact Us page
+- FAQ page
+- Terms & Conditions
+- Privacy Policy
+- Blog/News section
+- Agent profiles page
+- Property comparison page
+- Saved searches page
+- Email preferences page
+
+### Features to Consider:
+- Real-time notifications
+- Chat system (user to admin/agent)
+- Property viewing scheduler
+- Virtual tours/360° images
+- Property alerts (matching user preferences)
+- Advanced analytics for admin
+- Multi-language support
+- Dark mode toggle
+- Export data (CSV, PDF)
+
+---
+
+**Document Version:** 1.0  
+**Last Updated:** 2025  
+**Backend API Base URL:** `http://127.0.0.1:5000/api`
