@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import "./SignUp.css";  // ✅ reuse same styles
+import "./SignUp.css";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
-  // Form state
+  // ✅ Changed: Use "email" instead of "identifier"
   const [form, setForm] = useState({
-    identifier: "", // email OR phone
+    email: "",     // ← Changed from "identifier"
     password: ""
   });
 
@@ -22,17 +22,26 @@ export default function Login() {
       const res = await fetch("http://localhost:5000/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form)  // Now sends { email, password }
       });
 
       const data = await res.json();
       if (res.ok) {
         alert("✅ Login successful");
         console.log("User:", data);
-        // You can redirect with react-router here
-        // navigate("/");
+        
+        // ✅ Save token and user info
+        localStorage.setItem('access_token', data.access_token);
+        localStorage.setItem('user_role', data.role);
+        
+        // Redirect based on role
+        if (data.role === 'admin') {
+          window.location.href = '/admin/dashboard';
+        } else {
+          window.location.href = '/dashboard';
+        }
       } else {
-        alert(data.message || "Login failed");
+        alert(data.error || "Login failed");  // ← Changed from data.message
       }
     } catch (err) {
       console.error("Error:", err);
@@ -49,14 +58,15 @@ export default function Login() {
           </h2>
 
           <form className="form" onSubmit={handleSubmit}>
+            {/* ✅ Changed: name="email" instead of "identifier" */}
             <div className="field">
-              <label>Email or Phone</label>
+              <label>Email</label>
               <input
-                type="text"
-                name="identifier"
-                value={form.identifier}
+                type="email"
+                name="email"
+                value={form.email}
                 onChange={handleChange}
-                placeholder="Enter your email or phone number"
+                placeholder="Enter your email"
                 required
               />
             </div>
@@ -86,7 +96,7 @@ export default function Login() {
           </form>
 
           <p className="alt">
-            Don’t have an account? <a href="/signup">Sign Up</a>
+            Don't have an account? <a href="/signup">Sign Up</a>
           </p>
         </div>
       </div>
