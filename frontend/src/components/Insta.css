@@ -14,6 +14,12 @@
 
 .insta-details{
     padding: 30px 20px;
+    /* width: 200px; */
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin-top: 18%;
+    /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
 }
 
 .insta-details h3{

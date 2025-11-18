@@ -26,6 +26,23 @@ button:hover {
   background-color: var(--dark-purple);
 } */
 
+/* Bootstrap overrides for purple theme */
+.btn-primary {
+  background-color: var(--primary-purple) !important;
+  border-color: var(--primary-purple) !important;
+}
+
+.btn-primary:hover {
+  background-color: var(--dark-purple) !important;
+  border-color: var(--dark-purple) !important;
+}
+
+
+
+.spinner-border {
+  color: var(--primary-purple) !important;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -111,15 +128,34 @@ body {
   font-size: 13px;
 }
 
-/* Badges (like LISTED BY REDFIN) */
+
+/* Badge positioning */
 .badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.badge.purple {
+  background-color: var(--primary-purple);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+/* .badges {
   position: absolute;
   top: 10px;
   left: 10px;
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
-}
+} */
 
 .badge {
   padding: 4px 8px;
@@ -133,19 +169,93 @@ body {
   background-color: #d10027;
 }
 
-.badge.purple {
-  background-color: #7b2cbf;
+
+
+
+/* Heart icon styling */
+.actions .btn-link {
+  color: var(--primary-purple);
+  text-decoration: none;
 }
 
+.actions .btn-link:hover {
+  color: var(--dark-purple);
+  transform: scale(1.1);
+}
+
+/* Card hover effect */
+.populars-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.populars-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(122, 31, 162, 0.2);
+}
+/* 
+/* Search button in hero */
+.search-box button:hover {
+  background-color: var(--dark-purple) !important;
+  transform: scale(1.05);
+} */
+
+/* Empty state styling */
+.bi-inbox {
+  color: var(--light-purple);
+}
+
+
+
 /* Action Icons (heart/share) */
-.actions {
+/* .actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 10px;
   color: #333;
   cursor: pointer;
+} */
+
+/* Make actions visible and styled properly */
+/* .actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
 }
+
+.actions .btn-link {
+  color: var(--primary-purple);
+  text-decoration: none;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.actions .btn-link:hover {
+  color: var(--dark-purple);
+  transform: scale(1.2);
+  background-color: rgba(122, 31, 162, 0.1);
+  border-radius: 50%;
+}
+
+.actions .btn-link i {
+  font-size: 1.5rem;
+} */
+
+/* Make sure the heart icon is visible */
+/* .bi-heart {
+  color: var(--primary-purple);
+}
+
+.bi-heart:hover {
+  color: var(--dark-purple);
+} */
 
 .recommendation-card {
   position: relative;

@@ -42,13 +42,14 @@ img {
 
 .tabs {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  /* flex-wrap: wrap; */
+  gap: 5px;
   margin-bottom: 1.5rem;
+  width: 20%;
 }
 
 .tabs button {
-  padding: 10px 20px;
+  /* padding: 10px 20px; */
   background: #ddd;
   border: none;
   cursor: pointer;
@@ -60,13 +61,28 @@ img {
   font-weight: bold;
 }
 
-.search-box {
-  display: flex;
-  width: 90%;
-  max-width: 600px;
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
+/* .tabs button.hover {
+  background:  #7A1FA2;
+  font-weight: bold;
+} */
+
+/* .search-box { */
+  /* display: flex; */
+  /* flex: 1; */
+  /* gap:60%; */
+  /* width: 100%; */
+  /* max-width: 400px; */
+  /* background: white; */
+  /* border-radius: 8px; */
+  /* overflow: hidden; */
+/* } */
+
+
+
+/* Search button in hero */
+.search-box button:hover {
+  background-color: var(--dark-purple) !important;
+  transform: scale(1.05);
 }
 
 .search-box input {
@@ -79,8 +95,90 @@ img {
 .search-box button {
   background: #7A1FA2;
   color: white;
-  padding: 0 20px;
+  padding: 0 3px;
   border: none;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 1rem;
+}
+
+
+/* .search-box {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 700px;
+  background: white;
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 1rem;
+} */
+
+/* Input */
+/* .search-input {
+  flex: 1;
+  padding: 14px 20px;
+  border: none !important;
+  outline: none !important;
+  font-size: 1rem;
+  border-radius: 40px 0 0 40px;
+} */
+
+.search-box {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  margin-top: 1.5rem;
+}
+
+.search-input {
+  flex: 1;
+  padding: 12px 18px;
+  border: none !important;
+  outline: none !important;
+  font-size: 1rem;
+  border-radius: 50px 0 0 50px;
+  color: #333;
+}
+
+.search-btn {
+  background: linear-gradient(90deg, #9C27B0, #7A1FA2);
+  color: white !important;
+  border: none !important;
+  border-radius: 0 50px 50px 0 !important;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-btn:hover {
+  background: linear-gradient(90deg, #7A1FA2, #580aaf);
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .search-box {
+    flex-direction: column;
+    border-radius: 20px;
+  }
+
+  .search-input {
+    border-radius: 20px 20px 0 0;
+    padding: 10px 15px;
+  }
+
+  .search-btn {
+    width: 100%;
+    border-radius: 0 0 20px 20px;
+    padding: 10px;
+  }
 }

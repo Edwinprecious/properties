@@ -11,6 +11,8 @@ export default function Login() {
     password: ""
   });
 
+   const from = location.state?.from?.pathname || '/'
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };

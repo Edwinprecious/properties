@@ -1,92 +1,81 @@
-import React, { useEffect, useState } from 'react'
-import "./Navbar.css";
-// import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { Navbar, Nav, NavDropdown, Container, Button } from "react-bootstrap";
+import "./Navbar.css"; 
+import { Link } from "react-router-dom";
 
-const Navbar = () => {
-     /* set the state variable to be null; i.e no dropdown */
-    const [openDropdown, setDropdown] = useState(null)
-     /* i make a function to update the initial state variable  */
-     /*   */
-    const handledropdownClick = (menu)=>{
-        setDropdown(prev =>(prev === menu ? null : menu))
-       
+const RealEstateNavbar = () => {
+  const [scrolled, setScrolled] = useState(false);
+
+  // Detect scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 30) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
     };
-    // useEffect(()=>{
-    //     handledropdownClick()
-    // }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    
-    <>
-    <nav className='navbar'>
-    <section className='logo'>
-        {/* <img src="/images/EstateLogo.png" alt="images" /> */}
-        </section>
-    <section className='container'>
-        <ul className='nav-link'>
-            <span style={{fontSize:"25px", fontFamily: "sans-serif"}}>RealEstate</span>
-            <li className='nav-item'><a href="/buy">BUY</a></li>
-            <li className='nav-item'><a href="#">RENT</a></li>
-            <li className='nav-item'><a href="#">SELL</a></li>
-            <li className='nav-item dropdown' onMouseOver={()=> handledropdownClick(
-                "mortgage"
-            )}>
-                <span>MORTGAGE ▾</span>
-                {
-                    openDropdown === "mortgage" && (
-                    <div className='dropdown-menu'>
-                    <div className='dropdown-column'>
-                        <strong>Mortgage rates</strong>
-                        <a href="#">Today's mortgage rates</a>
-                        <a href="#">Today's refinance rates</a>
-                        <a href="#">Home equity loan</a>
-                        </div>
-                        <div className='dropdown-column'>
-                            <strong>Calculators</strong>
-                            <a href="#">Payment calculator</a>
-                            <a href="#">How much can I afford?</a>
-                            <a href="#">Rent vs. buy</a>
-                            <a href="#">How to get pre-approved</a>
+    <Navbar
+      expand="lg"
+      fixed="top"
+      className={`custom-navbar py-2 ${scrolled ? "navbar-scrolled" : ""}`}
+    >
+      <Container>
+        {/* Logo / Brand */}
+        <Navbar.Brand
+          href="/"
+          className="fw-bold text-purple"
+          style={{ fontSize: "1.4rem" }}
+        >
+          Valerie Classic Realty
+        </Navbar.Brand>
 
-                        </div>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
 
-                    </div>
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ms-auto align-items-center">
+            <Nav.Link href="/" className="mx-2 text-dark fw-medium">
+              Home
+            </Nav.Link>
+            <Nav.Link href="/about" className="mx-2 text-dark fw-medium">
+              About
+            </Nav.Link>
 
-                    )
-                }
-                 </li>
-                <li className='nav-item'><a href="#">LOAN</a></li>
-                <li className='nav-item'><a href="#">LOCATION</a></li>
-                <li className='nav-item dropdown' onMouseEnter={()=>handledropdownClick("Admin panel")}>
-                    <span>MANAGEMENT ▾</span>
-                    {
-                        openDropdown === "Admin panel" && (
-                            <div id='dropdown-menu'>
-                        <div className='dropdown-column'>
-                            <strong>Dashboard</strong>
-                            <a href="#">User Listings</a>
-                            <a href="#">Find Agent</a>
-                            <a href="#">Sales</a>
-                            <a href="#">Tarrif</a>
-                        </div>
+            <NavDropdown title="Properties" className="mx-2 fw-medium">
+              <NavDropdown.Item href="/properties/sale">For Sale</NavDropdown.Item>
+              <NavDropdown.Item href="/properties/rent">For Rent</NavDropdown.Item>
+              <NavDropdown.Item href="/properties/luxury">Luxury Homes</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="/properties/new">Add New Listing</NavDropdown.Item>
+            </NavDropdown>
 
-                    </div>
+            <NavDropdown title="Services" className="mx-2 fw-medium">
+              <NavDropdown.Item href="/services/valuation">Property Valuation</NavDropdown.Item>
+              <NavDropdown.Item href="/services/consultation">Consultation</NavDropdown.Item>
+              <NavDropdown.Item href="/services/management">Property Management</NavDropdown.Item>
+            </NavDropdown>
 
-                        )
-                    }
-                    
-                </li>
-                <li className='nav-item'><a href="#">TECHNICAL FEATURES</a></li>
-                <li className='nav-item'><a href="#">FEED</a></li>
+            <Nav.Link href="/contact" className="mx-2 text-dark fw-medium">
+              Contact
+            </Nav.Link>
 
+            <Button
+              href="/get-started"
+              className="ms-2 btn-purple"
+              as={Link} to={'/login'}
+            >
+              Get Started
+            </Button>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
+};
 
-            </ul>
-
-        </section>
-
-    </nav>
-    </>
-  )
-}
-
-export default Navbar
+export default RealEstateNavbar;

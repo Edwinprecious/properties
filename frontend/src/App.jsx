@@ -1,10 +1,11 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
-import Navbar from './components/Navbar';   // keep consistent casing
+import Navbar from './components/NavBar';   // keep consistent casing
 import Footer from './components/Footer';
 import Signup from './pages/SignUp';
 import Login from './pages/Login';
 import { Buy } from "./pages/Buy";
+import PropertiesPage from './pages/PropertiesPage';
 import AdminDashboard from './pages/admin/Dashboard';
 import ManageProperties from './pages/admin/ManageProperties';
 import AddProperty from './pages/admin/AddProperty';
@@ -40,6 +41,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/buy" element={<Buy />} />
+          <Route path="/properties" element={<PropertiesPage />} />
           {/* <Route path="/admin/dashboard" element={<AdminDashboard />} /> */}
           <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
           <Route path="/admin/properties" element={<AdminRoute><ManageProperties /></AdminRoute>} />

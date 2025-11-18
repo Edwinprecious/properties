@@ -1,0 +1,196 @@
+:root {
+  --primary-purple: #8B5CF6;
+  --dark-purple: #7C3AED;
+  --light-purple: #A78BFA;
+  --accent-purple: #C4B5FD;
+  --purple-gradient: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+}
+
+/* Category Page Styles */
+.category-page {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+/* Hero Section - Purple Gradient */
+.hero-section {
+  background: var(--purple-gradient);
+  margin-bottom: 0;
+  box-shadow: 0 4px 6px rgba(139, 92, 246, 0.1);
+}
+
+.hero-section.bg-primary,
+.hero-section.bg-success,
+.hero-section.bg-warning,
+.hero-section.bg-info {
+  background: var(--purple-gradient) !important;
+}
+
+/* Property Cards */
+.property-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+}
+
+.property-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.2) !important;
+}
+
+.property-card .card-img-top {
+  transition: transform 0.3s ease;
+}
+
+.property-card:hover .card-img-top {
+  transform: scale(1.08);
+}
+
+/* Badges - Purple Theme */
+.property-card .badge {
+  background-color: var(--primary-purple) !important;
+  color: white;
+  padding: 8px 12px;
+  font-weight: 500;
+}
+
+/* Price - Purple Text */
+.property-card .text-primary,
+.property-card .text-success {
+  color: var(--primary-purple) !important;
+}
+
+/* Buttons - Purple Theme */
+.btn-primary,
+.btn-success,
+.btn-info {
+  background-color: var(--primary-purple);
+  border-color: var(--primary-purple);
+  color: white;
+}
+
+.btn-primary:hover,
+.btn-success:hover,
+.btn-info:hover {
+  background-color: var(--dark-purple);
+  border-color: var(--dark-purple);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.btn-outline-primary,
+.btn-outline-success,
+.btn-outline-info {
+  color: var(--primary-purple);
+  border-color: var(--primary-purple);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-success:hover,
+.btn-outline-info:hover {
+  background-color: var(--primary-purple);
+  border-color: var(--primary-purple);
+  color: white;
+  transform: translateX(5px);
+}
+
+/* Filter Card */
+.card {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.08);
+}
+
+.card-title {
+  color: var(--primary-purple);
+  font-weight: 600;
+}
+
+/* Form Controls - Purple Focus */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary-purple);
+  box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.25);
+}
+
+/* Loading Spinner - Purple */
+.spinner-border {
+  color: var(--primary-purple) !important;
+}
+
+/* Alert - Purple Theme */
+.alert-danger {
+  background-color: rgba(139, 92, 246, 0.1);
+  border-color: var(--light-purple);
+  color: var(--dark-purple);
+}
+
+/* Empty State Icon */
+.bi-inbox {
+  color: var(--light-purple);
+}
+
+/* Link Hover Effects */
+a {
+  color: var(--primary-purple);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--dark-purple);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+  border: 1px solid var(--accent-purple);
+}
+
+.dropdown-item:hover {
+  background-color: rgba(139, 92, 246, 0.1);
+  color: var(--dark-purple);
+}
+
+/* Navigation Active State */
+.nav-link.active {
+  color: var(--primary-purple) !important;
+  font-weight: 600;
+}
+
+/* Property Details Badge Colors */
+.text-muted {
+  color: #6b7280 !important;
+}
+
+/* Custom Scrollbar - Purple Theme */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--light-purple);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-purple);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .hero-section h1 {
+    font-size: 2rem;
+  }
+  
+  .property-card {
+    margin-bottom: 1rem;
+  }
+}

@@ -7,8 +7,9 @@ const Insta = () => {
       <section className='insta-section'>
         <div className="insta">
             <div className="insta-details">
-                <h3>Follow our instagram page</h3>
-                <div><p>Follow our instagram page to keep updated on more property listings <br/> and amazing offers</p></div>
+                <h4>Join Our Real Estate Family</h4>
+                <div><p>Discover your dream home and stay updated with our latest property listings, client success stories, and behind-the-scenes moments.
+                Follow us on Instagram to see why hundreds of clients trust us to find their perfect space, Let’s make your property dreams a reality — one scroll at a time.</p></div>
             </div>
 
             <div className="insta-photo">
