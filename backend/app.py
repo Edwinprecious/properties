@@ -216,7 +216,7 @@ def get_properties():
         if sort_by not in allowed_sort_fields:
             sort_by = 'created_at'
         
-        # ========== PAGINATION (OPTIONAL) ==========
+        # ========== PAGINATION  ==========
         page = request.args.get('page', 1, type=int)
         per_page = request.args.get('per_page', 20, type=int)
         offset = (page - 1) * per_page
@@ -226,7 +226,7 @@ def get_properties():
         cursor = conn.cursor(dictionary=True)
         
         # Base query
-        query = "SELECT * FROM properties WHERE 1=1"
+        query = "SELECT * FROM properties WHERE 1 = 1"
         params = []
         
         # Add search condition
@@ -269,13 +269,32 @@ def get_properties():
             query += " AND bathrooms >= %s"
             params.append(bathrooms)
         
+        # # Add sorting
+        # query += f"""ORDER BY {sort_by} {sort_order.upper()}"""
+
+
+        # # Add pagination
+        
+        # query += "LIMIT %s OFFSET %s"
+        # params.extend([per_page, offset])
+        
+        # if request.args.get('limit'):
+        #     limit = int(request.args.get('limit'))
+        #     query += "LIMIT %s"
+        #     params.append(limit)
+
         # Add sorting
         query += f" ORDER BY {sort_by} {sort_order.upper()}"
-        
-        # Add pagination
-        query += " LIMIT %s OFFSET %s"
-        params.extend([per_page, offset])
-        
+
+        # Add pagination or limit
+        if request.args.get('limit'):
+            limit = int(request.args.get('limit'))
+            query += " LIMIT %s"
+            params.append(limit)
+        else:
+            query += " LIMIT %s OFFSET %s"
+            params.extend([per_page, offset])
+
         # Execute query
         cursor.execute(query, params)
         properties = cursor.fetchall()
@@ -692,5 +711,7 @@ def test_email():
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
+
+
 
 

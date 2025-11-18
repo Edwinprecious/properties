@@ -4,7 +4,7 @@ from PIL import Image
 import uuid
 
 # Configuration
-UPLOAD_FOLDER ='uploads/properties'
+UPLOAD_FOLDER ='static/uploads/properties'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5MB
 MAX_IMAGE_DIMENSION = 1920  # Max width/height
