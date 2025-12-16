@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../services/api';
 
 const PopularCard = ({ 
   id, 
@@ -58,10 +59,10 @@ const PopularCard = ({
     <div className="populars-cards" style={{ width: "100%" }}>
       <div className="populars-card" onClick={handleViewDetails} style={{ cursor: 'pointer' }}>
         {/* Image */}
-        {image}
+        {/* {image} */}
         <img
           className="card-img-top"
-          src={image ? image : '/images/Image_fx.jpg'}
+          src={image ? `${API_BASE_URL}${image}` : '/images/Image_fx.jpg'}
           alt={model}
           onError={() => {
             const defaultImage = '/images/Image_fx.jpg';

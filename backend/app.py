@@ -29,9 +29,18 @@ init_mail(app) # Initialize email service
 app.config["SECRET_KEY"] = 'your-super-secret-key-change-this-in-production'
 app.config["JWT_SECRET_KEY"] = 'your-super-secret-key-change-this-in-production'
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(hours=24)  # Token valid for 24 hours
-app.config['UPLOAD_FOLDER'] = 'static/images/uploads'
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads', 'properties')
+app.config['UPLOAD_FOLDER'] = 'static/uploads/properties'
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB max file size
 
+# for cookies authentication
+# app.config["SESSION_COOKIES_SECURE"] = True
+# app.config["SESSION_COOKIES_HTTPONLY"] = True
+# app.config["SESSION_COOKIES_SAMESITE"] = "Lax"
+
+# for cross site cookies 
+# app.config["SESSION_COOKIES_SAMESITE"] = "None"
+# app.config["SESSION_COOKIES_SECURE"] = True
 
 
 

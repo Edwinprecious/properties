@@ -12,6 +12,9 @@ import AddProperty from './pages/admin/AddProperty';
 import EditProperty from './pages/admin/EditProperty';
 import ManageInquiries from './pages/admin/ManageInquiries';
 import AdminRoute from './components/AdminRoute';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 // import ForgotPassword from './pages/ForgotPassword';
 // import BuyNavbar from './pages/BuyNavbar';
 

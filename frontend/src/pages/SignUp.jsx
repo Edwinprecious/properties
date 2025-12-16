@@ -137,10 +137,10 @@ export default function SignUp() {
                   type="radio"
                   name="role"
                   value="client"
-                  checked={role === "client"}
-                  onChange={() => setRole("client")}
+                  checked={role === "user"}
+                  onChange={() => setRole("user")}
                 />
-                As a Client
+                As a User
               </label>
             </div>
 

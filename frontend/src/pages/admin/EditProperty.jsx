@@ -1,19 +1,21 @@
-
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {Container, Row,Col, Card, Button, Form, Spinner, Alert} from "react-bootstrap";
+import toast from 'react-hot-toast';
+import {fetchPropertyById, uploadCoverImage, uploadAdditionalImages, updateProperty, deleteProperty} from "../../services/api"; // adjust path
 
 const EditProperty = () => {
   const { id } = useParams();
   const [formData, setFormData] = useState({
-    title: '',
-    price: '',
-    location: '',
-    address: '',
-    description: '',
-    category: 'rent',
-    status: 'active',
-    bedrooms: '',
-    bathrooms: '',
+    title: "",
+    price: "",
+    location: "",
+    address: "",
+    description: "",
+    category: "rent",
+    status: "active",
+    bedrooms: "",
+    bathrooms: "",
   });
   const [coverImage, setCoverImage] = useState(null);
   const [additionalImages, setAdditionalImages] = useState([]);
@@ -23,36 +25,29 @@ const EditProperty = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchPropertyData();
+    loadProperty();
   }, [id]);
 
-  const fetchPropertyData = async () => {
+  const loadProperty = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:5000/api/properties/${id}`);
-      
-      if (!response.ok) {
-        throw new Error('Property not found');
-      }
-
-      const data = await response.json();
+      const data = await fetchPropertyById(id);
       const property = data.data;
-
       setFormData({
-        title: property.title || '',
-        price: property.price || '',
-        location: property.location || '',
-        address: property.address || '',
-        description: property.description || '',
-        category: property.category || 'rent',
-        status: property.status || 'active',
-        bedrooms: property.bedrooms || '',
-        bathrooms: property.bathrooms || '',
+        title: property.title || "",
+        price: property.price || "",
+        location: property.location || "",
+        address: property.address || "",
+        description: property.description || "",
+        category: property.category || "rent",
+        status: property.status || "active",
+        bedrooms: property.bedrooms || "",
+        bathrooms: property.bathrooms || "",
       });
-
       setCoverImage(property.image_url || null);
       setAdditionalImages(property.images || []);
     } catch (err) {
       setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -60,69 +55,30 @@ const EditProperty = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleCoverImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     try {
-      const token = localStorage.getItem('access_token');
-      const formData = new FormData();
-      formData.append('image', file);
-
-      const response = await fetch('http://127.0.0.1:5000/api/admin/upload-image', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setCoverImage(data.image_url);
-        alert('Cover image uploaded successfully!');
-      } else {
-        alert('Failed to upload cover image');
-      }
+      const data = await uploadCoverImage(file);
+      setCoverImage(data.image_url);
+      toast.success("Cover image uploaded successfully!");
     } catch (err) {
-      alert('Error uploading image: ' + err.message);
+      toast.error(err.message);
     }
   };
 
   const handleAdditionalImagesUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
-
     try {
-      const token = localStorage.getItem('access_token');
-      const formData = new FormData();
-      files.forEach(file => {
-        formData.append('images', file);
-      });
-
-      const response = await fetch('http://127.0.0.1:5000/api/admin/upload-images', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setAdditionalImages(prev => [...prev, ...data.image_urls]);
-        alert(`${data.image_urls.length} images uploaded successfully!`);
-      } else {
-        alert('Failed to upload images');
-      }
+      const data = await uploadAdditionalImages(files);
+      setAdditionalImages((prev) => [...prev, ...data.image_urls]);
+      toast.success(`${data.image_urls.length} images uploaded successfully!`);
     } catch (err) {
-      alert('Error uploading images: ' + err.message);
+      toast.error(err.message);
     }
   };
 
@@ -130,10 +86,7 @@ const EditProperty = () => {
     e.preventDefault();
     setSaving(true);
     setError(null);
-
     try {
-      const token = localStorage.getItem('access_token');
-      
       const propertyData = {
         ...formData,
         price: parseFloat(formData.price),
@@ -142,323 +95,256 @@ const EditProperty = () => {
         cover_image: coverImage,
         images: additionalImages,
       };
-
-      const response = await fetch(`http://127.0.0.1:5000/api/admin/properties/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(propertyData),
-      });
-
-      if (response.ok) {
-        alert('Property updated successfully!');
-        navigate('/admin/properties');
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || 'Failed to update property');
-      }
+      await updateProperty(id, propertyData);
+      toast.success("Property updated successfully!");
+      navigate("/admin/properties");
     } catch (err) {
-      setError('Error updating property: ' + err.message);
+      setError(err.message);
+      toast.error(err.message);
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Are you sure you want to delete this property? This action cannot be undone.')) {
-      return;
-    }
-
+    if (!window.confirm("Are you sure you want to delete this property?")) return;
     try {
-      const token = localStorage.getItem('access_token');
-      
-      const response = await fetch(`http://127.0.0.1:5000/api/admin/properties/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        alert('Property deleted successfully!');
-        navigate('/admin/properties');
-      } else {
-        alert('Failed to delete property');
-      }
+      await deleteProperty(id);
+      toast.success("Property deleted successfully!");
+      navigate("/admin/properties");
     } catch (err) {
-      alert('Error deleting property: ' + err.message);
+      toast.error(err.message);
     }
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
+      <Container className="d-flex justify-content-center align-items-center vh-100">
+        <Spinner animation="border" variant="primary" />
+      </Container>
     );
   }
 
   if (error && !formData.title) {
     return (
-      <div className="p-6">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          <p className="font-bold">Error</p>
+      <Container className="py-5">
+        <Alert variant="danger">
+          <Alert.Heading>Error</Alert.Heading>
           <p>{error}</p>
-          <button
-            onClick={() => navigate('/admin/properties')}
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
-          >
+          <Button variant="primary" onClick={() => navigate("/admin/properties")}>
             Back to Properties
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Alert>
+      </Container>
     );
   }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">Edit Property</h1>
-          <p className="text-gray-600 mt-2">Update property details</p>
-        </div>
+    <Container className="py-5">
+      <Row className="mb-4">
+        <Col>
+          <h1 className="fw-bold">Edit Property</h1>
+          <p className="text-muted">Update property details</p>
+        </Col>
+      </Row>
 
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
-            <p>{error}</p>
-          </div>
-        )}
+      {error && <Alert variant="danger">{error}</Alert>}
 
-        {/* Form - Same as AddProperty but with pre-filled data */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-6">
-          {/* Basic Information */}
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Title <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+      <Card className="shadow-sm">
+        <Card.Body>
+          <Form onSubmit={handleSubmit}>
+            {/* Basic Information */}
+            <h4 className="fw-semibold mb-3">Basic Information</h4>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Title *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Price (₦) *</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Location *</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Address</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Category *</Form.Label>
+                  <Form.Select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                  >
+                    <option value="rent">Rent</option>
+                    <option value="sell">Sell</option>
+                    <option value="land">Land</option>
+                    <option value="airbnb">Airbnb</option>
+                    <option value="buy">Buy</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Status</Form.Label>
+                  <Form.Select
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}
+                  >
+                    <option value="active">Active</option>
+                    <option value="sold">Sold</option>
+                    <option value="rented">Rented</option>
+                    <option value="occupied">Occupied</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            </Row>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Price (₦) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="number"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Location <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Address
-                </label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Category <span className="text-red-500">*</span>
-                </label>
-                <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="rent">Rent</option>
-                  <option value="sell">Sell</option>
-                  <option value="land">Land</option>
-                  <option value="airbnb">Airbnb</option>
-                  <option value="buy">Buy</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Status
-                </label>
-                <select
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="active">Active</option>
-                  <option value="sold">Sold</option>
-                  <option value="rented">Rented</option>
-                  <option value="occupied">Occupied</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Property Details */}
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Property Details</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Bedrooms
-                </label>
-                <input
-                  type="number"
-                  name="bedrooms"
-                  value={formData.bedrooms}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Bathrooms
-                </label>
-                <input
-                  type="number"
-                  name="bathrooms"
-                  value={formData.bathrooms}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Description
-              </label>
-              <textarea
+            {/* Property Details */}
+            <h4 className="fw-semibold mt-4 mb-3">Property Details</h4>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Bedrooms</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="bedrooms"
+                    value={formData.bedrooms}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Bathrooms</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="bathrooms"
+                    value={formData.bathrooms}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Form.Group className="mb-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={4}
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                rows="5"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-            </div>
-          </div>
+            </Form.Group>
 
-          {/* Images */}
-          <div>
-            <h2 className="text-xl font-semibold mb-4">Images</h2>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Cover Image
-                </label>
-                {coverImage && (
-                  <div className="mb-2">
-                    <img
-                      src={`http://127.0.0.1:5000${coverImage}`}
-                      alt="Current cover"
-                      className="w-32 h-32 object-cover rounded"
-                    />
-                  </div>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleCoverImageUpload}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+             {/* Images */}
+            <h4 className="fw-semibold mt-4 mb-3">Images</h4>
+            <Form.Group className="mb-3">
+              <Form.Label>Cover Image</Form.Label>
+              {coverImage && (
+                <div className="mb-2">
+                  <img
+                    src={`http://127.0.0.1:5000${coverImage}`}
+                    alt="Cover"
+                    className="rounded border"
+                    style={{ width: 120, height: 120, objectFit: "cover" }}
+                  />
+                </div>
+              )}
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={handleCoverImageUpload}
+              />
+            </Form.Group>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Additional Images
-                </label>
-                {additionalImages.length > 0 && (
-                  <div className="mb-2 flex gap-2 flex-wrap">
-                    {additionalImages.map((img, idx) => (
+            <Form.Group className="mb-3">
+              <Form.Label>Additional Images</Form.Label>
+              {additionalImages.length > 0 && (
+                <Row className="mb-2">
+                  {additionalImages.map((img, idx) => (
+                    <Col xs={4} md={3} key={idx}>
                       <img
-                        key={idx}
                         src={`http://127.0.0.1:5000${img}`}
                         alt={`Additional ${idx + 1}`}
-                        className="w-24 h-24 object-cover rounded"
+                        className="rounded border mb-2"
+                        style={{ width: "100%", height: 100, objectFit: "cover" }}
                       />
-                    ))}
-                  </div>
-                )}
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleAdditionalImagesUpload}
-                  className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-          </div>
+                    </Col>
+                  ))}
+                </Row>
+              )}
+              <Form.Control
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleAdditionalImagesUpload}
+              />
+            </Form.Group>
 
-          {/* Action Buttons */}
-          <div className="flex gap-4">
-            <button
-              type="submit"
-              disabled={saving}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition disabled:opacity-50"
-            >
-              {saving ? 'Saving...' : 'Save Changes'}
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/admin/properties')}
-              className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg shadow transition"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg shadow transition ml-auto"
-            >
-              🗑️ Delete Property
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+            {/* Action Buttons */}
+            <div className="d-flex gap-3 mt-4">
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={saving}
+              >
+                {saving ? "Saving..." : "Save Changes"}
+              </Button>
+              <Button
+                variant="secondary"
+                onClick={() => navigate("/admin/properties")}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="danger"
+                className="ms-auto"
+                onClick={handleDelete}
+              >
+                <i className="bi bi-trash me-2"></i> Delete Property
+              </Button>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };
 
